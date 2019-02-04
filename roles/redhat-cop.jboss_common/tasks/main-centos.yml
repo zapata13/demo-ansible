@@ -8,7 +8,7 @@
   when: transfer_method == 'csp-to-host' and install_pip_dependencies|bool
 
 - name: Stop and disable firewalld.
-    service:
-      name: firewalld
-      state: stopped
-      enabled: False
+  service:
+    name: firewalld
+    state: stopped
+    enabled: False
