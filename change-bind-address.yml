@@ -8,8 +8,8 @@
   tasks:
     - name: Copy files for cli execution
       copy:
-        src: {{item}}
-        dest: {{jboss_home}}/bin/{{item}}
+        src: "{{item}}"
+        dest: "{{jboss_home}}/bin/{{item}}"
       loop: "files_cli"
 
     - name: Expose management console and reload
