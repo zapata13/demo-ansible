@@ -9,4 +9,4 @@
     - name: Expose management console and reload
       command:
         "{{jboss_home}}/bin/jboss-cli.sh --connect --file={{item.value}}"
-      with_dict: "{{files_cli}}"
+      loop: "{{files_cli}}"
