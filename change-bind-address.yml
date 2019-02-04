@@ -8,5 +8,5 @@
   tasks:
     - name: Expose management console and reload
       command:
-        "{{jboss_home}}/bin/jboss-cli.sh --connect --file={{item.value}}"
+        "{{jboss_home}}/bin/jboss-cli.sh --connect --file={{item}}"
       loop: "{{files_cli}}"
