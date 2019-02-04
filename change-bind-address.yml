@@ -2,11 +2,11 @@
 - hosts: all
   vars:
     jboss_home: /opt/jboss-as/jboss-eap-7.1
-    files-cli:
+    files_cli:
       - change-bind.cli
       - reload.cli
   tasks:
     - name: Expose management console and reload
       command:
         "{{jboss_home}}/bin/jboss-cli.sh --connect --file={{item.value}}"
-      with_dict: "{{files-cli}}"
+      with_dict: "{{files_cli}}"
