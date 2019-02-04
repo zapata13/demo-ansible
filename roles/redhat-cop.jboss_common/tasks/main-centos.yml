@@ -7,23 +7,8 @@
   - common
   when: transfer_method == 'csp-to-host' and install_pip_dependencies|bool
 
-- name: be sure firewalld is installed
-  dnf: name=firewalld state=installed
-  tags:
-   - install
-   - firewalld
- 
-- name: be sure firewalld is disabled
-  systemd: name=firewalld enabled=no
-  tags:
-   - install
-   - atomic
-   - firewalld
-
-- name: be sure firewalld is stopped
-  systemd: name=firewalld state=stopped
-  ignore_errors: yes
-  tags:
-   - install
-   - atomic
-   - firewalld
+- name: Stop and disable firewalld.
+    service:
+      name: firewalld
+      state: stopped
+      enabled: False
