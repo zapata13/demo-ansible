@@ -1,0 +1,64 @@
+---
+
+- name: Tasks on a RHEL host
+  include_tasks: main-rhel.yml
+  when: ansible_distribution == 'RedHat'
+
+- name: Tasks on a CentOS host
+  include_tasks: main-centos.yml
+  when: ansible_distribution == 'CentOS'
+
+- name: Set Java to be Installed
+  set_fact:
+    packages_to_install: "{{ packages_to_install | default([]) + [ jboss_java_pkg_name ] }}"
+  when: install_java|bool
+  tags:
+    - common
+
+- name: Set Unzip to be Installed
+  set_fact:
+    packages_to_install: "{{ packages_to_install | default([]) + [ 'unzip' ] }}"
+  tags:
+    - common
+
+- name: Set Initscripts to be Installed
+  set_fact:
+    packages_to_install: "{{ packages_to_install | default([]) + [ 'initscripts' ] }}"
+  tags:
+    - common
+  when: ansible_distribution_major_version is version_compare('7', '<')
+
+- name: Install packages
+  package:
+    name: "{{ packages_to_install }}"
+    state: present
+  register: packages_result
+  retries: 5
+  until: packages_result is success
+
+- name: Install PIP dependencies and Remove EPEL
+  block:
+    - name: Install PIP
+      action: "{{ ansible_pkg_mgr }} name=python-pip state=present"
+      tags:
+        - common
+
+    - name: Install Python Dependencies
+      pip:
+        name: "{{ item }}"
+        state: present
+      register: pip_result
+      retries: 5
+      until: pip_result is success
+      with_items:
+        - requests
+        - lxml
+      tags:
+        - common
+
+    - name: Remove EPEL Package
+      action: "{{ ansible_pkg_mgr }} name='epel*' state=absent"
+      changed_when: False
+      tags:
+        - common
+  when: transfer_method == 'csp-to-host' and install_pip_dependencies|bool
