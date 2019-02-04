@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars:
+    jboss_home: /opt/jboss-as/jboss-eap-7.1
+  tasks:
+    - name: Add admin user to jboss console
+      command:
+        "{{jboss_home}}/bin/add-user.sh -s -r ManagementRealm -u admin -p r3dh4t1!"
