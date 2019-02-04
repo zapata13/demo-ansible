@@ -4,6 +4,9 @@
   become: true
   gather_facts: true
 
+  vars:
+    transfer_method: copy-from-controller
+
   roles:
     - redhat-cop.jboss_common
     - redhat-cop.jboss_eap
