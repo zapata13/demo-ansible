@@ -3,16 +3,25 @@
   vars:
     jboss_home: /opt/jboss-as/jboss-eap-7.1
     files_cli:
-      - { file: 'change-bind.cli'}
-      - { file: 'reload.cli'}
+      - change-bind.cli
+      - reload.cli
   tasks:
+    - name: Printing files
+      debug: "{{item}}"
+      with_items: "{{files_cli}}"
+
     - name: Copy files for cli execution
       copy:
-        src: "{{item.file}}"
-        dest: "{{jboss_home}}/bin/{{item.file}}"
-      with_items: "files_cli"
+        content: "/interface=management/:write-attribute(name=inet-address,value=0.0.0.0)"
+        dest: "/tmp/change-bind.cli"
+
+    - name: Copy files for cli execution
+      copy:
+        content: "reload"
+        dest: "/tmp/reload.cli"
+
 
     - name: Expose management console and reload
       command:
-        "{{jboss_home}}/bin/jboss-cli.sh --connect --file={{item.file}}"
+        "{{jboss_home}}/bin/jboss-cli.sh --connect --file=/tmp/{{item}}"
       with_items: "{{files_cli}}"
