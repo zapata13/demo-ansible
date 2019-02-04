@@ -1,17 +1,8 @@
 ---
 
-- hosts: jboss_eap
+- hosts: all
   become: true
   gather_facts: true
-
-  vars_prompt:
-    - name: "rhn_username"
-      prompt: "Enter Your Red Hat Customer Portal Username"
-      private: no
-
-    - name: "rhn_password"
-      prompt: "Enter Your Red Hat Customer Portal Password"
-      private: yes
 
   roles:
     - redhat-cop.jboss_common
